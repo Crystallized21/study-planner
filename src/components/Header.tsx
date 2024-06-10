@@ -8,8 +8,8 @@ const Header: React.FC = () => {
             <nav>
                 <ul className="flex space-x-4">
                     <li><Link href="/">Home</Link></li>
-                    <li><Link href="/schedule">Schedule</Link></li>
                     <li><Link href="/assignments">Assignments</Link></li>
+                    <li><Link href="/schedule">Schedule</Link></li>
                 </ul>
             </nav>
         </header>
