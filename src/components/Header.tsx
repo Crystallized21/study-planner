@@ -7,9 +7,9 @@ const Header: React.FC = () => {
             <h1 className="text-2xl font-bold">Study Planner</h1>
             <nav>
                 <ul className="flex space-x-4">
-                    <li><Link href="/"><a>Home</a></Link></li>
-                    <li><Link href="/schedule"><a>Schedule</a></Link></li>
-                    <li><Link href="/assignments"><a>Assignments</a></Link></li>
+                    <li><Link href="/">Home</Link></li>
+                    <li><Link href="/schedule">Schedule</Link></li>
+                    <li><Link href="/assignments">Assignments</Link></li>
                 </ul>
             </nav>
         </header>
