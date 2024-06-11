@@ -1,11 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Header from '../components/Header';
-
-interface Assignment {
-    id: number;
-    text: string;
-    dueDate: string;
-}
+import { useAssignments } from '@/context/AssignmentsContext';
 
 interface Schedule {
     id: number;
@@ -14,28 +9,29 @@ interface Schedule {
 }
 
 const Home: React.FC = () => {
-    const [assignments, setAssignments] = useState<Assignment[]>([]);
+    const { assignments } = useAssignments();
     const [schedules, setSchedules] = useState<Schedule[]>([]);
 
     useEffect(() => {
-        const savedAssignments = JSON.parse(localStorage.getItem('assignments') || '[]');
         const savedSchedules = JSON.parse(localStorage.getItem('schedules') || '[]');
-        setAssignments(savedAssignments);
         setSchedules(savedSchedules);
+        console.log("Saved schedules:", savedSchedules); // Debugging log
     }, []);
 
     const getUpcomingAssignments = () => {
-        // Filter assignments to show only those due within the next week
         const now = new Date();
         const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-        return assignments.filter(assignment => new Date(assignment.dueDate) <= oneWeekFromNow);
+        const upcomingAssignments = assignments.filter(assignment => new Date(assignment.dueDate) <= oneWeekFromNow);
+        console.log("Upcoming assignments:", upcomingAssignments); // Debugging log
+        return upcomingAssignments;
     };
 
     const getUpcomingSchedules = () => {
-        // Filter schedules to show only those within the next week
         const now = new Date();
         const oneWeekFromNow = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000);
-        return schedules.filter(schedule => new Date(schedule.date) <= oneWeekFromNow);
+        const upcomingSchedules = schedules.filter(schedule => new Date(schedule.date) <= oneWeekFromNow);
+        console.log("Upcoming schedules:", upcomingSchedules); // Debugging log
+        return upcomingSchedules;
     };
 
     return (

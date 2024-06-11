@@ -1,32 +1,24 @@
-import React, { useState, useEffect } from 'react';
-
-interface Assignment {
-    id: number;
-    text: string;
-}
+import React, { useState } from 'react';
+import { useAssignments } from '@/context/AssignmentsContext';
 
 const AssignmentForm: React.FC = () => {
-    const [assignment, setAssignment] = useState<string>('');
-    const [assignments, setAssignments] = useState<Assignment[]>([]);
-
-    useEffect(() => {
-        const savedAssignments = JSON.parse(localStorage.getItem('assignments') || '[]');
-        setAssignments(savedAssignments);
-    }, []);
-
-    useEffect(() => {
-        localStorage.setItem('assignments', JSON.stringify(assignments));
-    }, [assignments]);
+    const { assignments, addAssignment, deleteAssignment } = useAssignments();
+    const [assignmentText, setAssignmentText] = useState<string>('');
+    const [dueDate, setDueDate] = useState<string>('');
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        const newAssignment = { id: Date.now(), text: assignment };
-        setAssignments([...assignments, newAssignment]);
-        setAssignment('');
+        if (assignmentText.trim() === '' || dueDate.trim() === '') return;
+        const newAssignment = { id: Date.now(), text: assignmentText, dueDate };
+        addAssignment(newAssignment);
+        setAssignmentText('');
+        setDueDate('');
+        console.log("Assignments after adding:", assignments); // Debugging log
     };
 
     const handleDelete = (id: number) => {
-        setAssignments(assignments.filter(assignment => assignment.id !== id));
+        deleteAssignment(id);
+        console.log("Assignments after deleting:", assignments); // Debugging log
     };
 
     return (
@@ -34,9 +26,15 @@ const AssignmentForm: React.FC = () => {
             <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
                 <input
                     type="text"
-                    value={assignment}
-                    onChange={(e) => setAssignment(e.target.value)}
+                    value={assignmentText}
+                    onChange={(e) => setAssignmentText(e.target.value)}
                     placeholder="Enter your assignment"
+                    className="p-2 border border-gray-300 rounded text-black"
+                />
+                <input
+                    type="date"
+                    value={dueDate}
+                    onChange={(e) => setDueDate(e.target.value)}
                     className="p-2 border border-gray-300 rounded text-black"
                 />
                 <button type="submit" className="bg-blue-600 text-white py-2 rounded">
@@ -46,7 +44,8 @@ const AssignmentForm: React.FC = () => {
             <ul className="mt-4">
                 {assignments.map((assignment) => (
                     <li key={assignment.id} className="flex justify-between items-center p-2 border border-gray-300 rounded mt-2">
-                        {assignment.text}
+                        <span>{assignment.text}</span>
+                        <span className="text-gray-500">{new Date(assignment.dueDate).toLocaleDateString()}</span>
                         <button onClick={() => handleDelete(assignment.id)} className="bg-red-600 text-white py-1 px-2 rounded">
                             Delete
                         </button>
