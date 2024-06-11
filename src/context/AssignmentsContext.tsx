@@ -31,11 +31,19 @@ export const AssignmentsProvider: React.FC<AssignmentsProviderProps> = ({ childr
     }, [assignments]);
 
     const addAssignment = (assignment: Assignment) => {
-        setAssignments((prev) => [...prev, assignment]);
+        setAssignments((prev) => {
+            const updatedAssignments = [...prev, assignment];
+            localStorage.setItem('assignments', JSON.stringify(updatedAssignments));
+            return updatedAssignments;
+        });
     };
 
     const deleteAssignment = (id: number) => {
-        setAssignments((prev) => prev.filter(assignment => assignment.id !== id));
+        setAssignments((prev) => {
+            const updatedAssignments = prev.filter(assignment => assignment.id !== id);
+            localStorage.setItem('assignments', JSON.stringify(updatedAssignments));
+            return updatedAssignments;
+        });
     };
 
     return (
